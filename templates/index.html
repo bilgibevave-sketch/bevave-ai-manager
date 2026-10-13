@@ -1,0 +1,54 @@
+
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BEVAVE AI Satış Müdürü</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f3f6f9;color:#172b3a;margin:0}
+header{background:#142536;color:white;padding:22px}
+main{max-width:850px;margin:30px auto;padding:18px}
+section{background:white;border-radius:14px;padding:22px;margin-bottom:18px}
+textarea,input,select{box-sizing:border-box;width:100%;padding:12px;margin:8px 0;border:1px solid #ccd5dd;border-radius:8px}
+button{background:#ef8a32;color:#182635;padding:13px;border:0;border-radius:8px;font-weight:bold;width:100%;margin-top:12px}
+#result{white-space:pre-wrap;line-height:1.6;overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+<header><b>BEVAVE AI</b><div>Yapay zekâ pazarlama ve satış merkezi</div></header>
+<main>
+<section>
+<h2>Kampanya ve video senaryosu oluştur</h2>
+<form id="form">
+<label>Kampanya konusu</label>
+<textarea id="topic" required placeholder="Örn. XML bayilik başvurusu kampanyası"></textarea>
+<label>Hedef kitle</label>
+<select id="audience">
+<option>E-ticarete başlamak isteyen girişimciler</option>
+<option>Mevcut e-ticaret satıcıları</option>
+<option>Kırtasiye ve ofis ürünleri satan esnaf</option>
+</select>
+<button id="submit" type="submit">Kampanya oluştur</button>
+</form>
+</section>
+<section><h2>Sonuç</h2><div id="result">Henüz içerik oluşturulmadı.</div></section>
+</main>
+<script>
+document.getElementById('form').addEventListener('submit',async function(e){
+e.preventDefault();
+const btn=document.getElementById('submit');
+const result=document.getElementById('result');
+btn.disabled=true;btn.textContent='Hazırlanıyor...';
+result.textContent='İçerik hazırlanıyor...';
+try{
+const response=await fetch('/api/campaign',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({topic:document.getElementById('topic').value,audience:document.getElementById('audience').value})});
+const data=await response.json();
+if(!response.ok)throw new Error(data.error||'İstek başarısız.');
+result.textContent=data.result;
+}catch(err){result.textContent=err.message;}
+finally{btn.disabled=false;btn.textContent='Kampanya oluştur';}
+});
+</script>
+</body>
+</html>
